@@ -33,13 +33,25 @@ void Global2OccupancyGrid2D::pub_occupancy_grid_2D_from_globalmap(global_map_car
 {
 
     occupancy_grid.header.stamp = stamp;
+
+    //TODO Here: Get Occupancy from 0 to 100, need to think about right 2D projection. Max is only giving 50 and not smaller values
     //occupancy_grid.header.stamp = ros::Time::now();
 
-    for(auto cellDouble:map.occupied_cell_percentage_idx_list)
+    //for(auto cell:map.occupied_cell_percentage_idx_list)
+    for(auto cell:map.occupied_cell_idx_list)
     {
-        auto cell = cellDouble.vec
-        double occup3Dprob = cellDouble.value
-        occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=std::max(occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx),occup3Dprob);
+        //auto cell = cellDouble.vec;
+        //double occup3Dprob = (cellDouble.value)*100;
+        //double oldValue = occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx);
+        //if (std::max(oldValue,occup3Dprob) != 50){
+            //std::cout << std::max(oldValue,occup3Dprob) <<std::endl;
+        //}
+        //occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=(oldValue+occup3Dprob)/2;
+        occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=100;
+        //double oldValue = occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx);
+        //if (occup3Dprob != 0.5){
+        //    std::cout << "ProbOcc:"<<oldValue << std::endl;
+        //}
     }
 
     this->occupancygrid_pub.publish(occupancy_grid);

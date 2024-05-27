@@ -185,13 +185,19 @@ void global_map_cartesian::input_pc_pose(vector<Vec3> PC_l, vector<Vec3> PC_miss
     //Update occupied list;
     visualization_cell_list.clear();
     occupied_cell_idx_list.clear();
+    bool firstTime = true;
     for(auto cell:this->map)
     {   
-        double cell_occupancy_prob = logit2prob((cell.measurement_times)/(this->ratio))
-        Vec3I_Double vec_double(Vec3I(cell.idx_x,cell.idx_y,cell.idx_z), cell_occupancy_prob)
-        occupied_cell_percentage_idx_list.push_back(vec_double)
+        double cell_occupancy_prob = logit2prob((cell.measurement_times)/(this->ratio));
+        Vec3I_Double vec_double(Vec3I(cell.idx_x,cell.idx_y,cell.idx_z), cell_occupancy_prob);
+        occupied_cell_percentage_idx_list.push_back(vec_double);
         if(cell.is_occupied)
         {
+            //if(firstTime == true){
+                //cout << "CellM:"<<cell.measurement_times << endl;
+                //cout << "Ratio:"<<this->ratio <<endl;
+                //firstTime = false;
+            //}
             occupied_cell_idx_list.push_back(Vec3I(cell.idx_x,cell.idx_y,cell.idx_z));
             visualization_cell_list.push_back(cell.vis_pt);
         }

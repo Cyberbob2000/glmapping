@@ -12,10 +12,6 @@ struct Vec3I_Double {
     // Constructor
     Vec3I_Double(const Vec3I& vec, double value) : vec(vec), value(value) {}
 
-    // Print function for demonstration
-    void print() const {
-        std::cout << "Vec3I: (" << vec.x << ", " << vec.y << ", " << vec.z << "), Value: " << value << std::endl;
-    }
 };
 
 class global_map_cartesian
