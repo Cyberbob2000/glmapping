@@ -62,6 +62,7 @@ add_library(glmapping
     src/rviz_vis.cpp
     src/msg_local2global.cpp
     src/global2occupancygrid2d.cpp
+    src/global2occupancygrid2d_fixed_z.cpp
     src/global2esdf.cpp
     src/global2esdf3d.cpp
     )
