@@ -26,8 +26,8 @@ private:
     rviz_vis *globalmap_publisher;
     Global2OccupancyGrid2D *occupancy_grid_publisher;
     Global2OccupancyGrid2DFZ *occupancy_grid_publisher_fixed_z;
-    Global2ESDF *esfd2d_publisher;
-    Global2ESDF3DPatch *esfd3d_publisher;
+    Global2ESDF *esdf2d_publisher;
+    Global2ESDF3DPatch *esdf3d_publisher;
     ros::Time last_esft_stamp;
 
     void from_lm_callback(const glmapping::local2globalConstPtr& msg)
@@ -41,10 +41,10 @@ private:
         globalmap_publisher->pub_globalmap(global_map->visualization_cell_list,stamp);
         occupancy_grid_publisher->pub_occupancy_grid_2D_from_globalmap(*global_map,stamp);
         occupancy_grid_publisher_fixed_z->pub_occupancy_grid_2D_from_globalmap(*global_map,stamp);
-        esfd3d_publisher->pub_ESDF_3D_from_globalmap(*global_map,stamp);
+        esdf3d_publisher->pub_ESDF_3D_from_globalmap(*global_map,stamp);
         if((ros::Time::now().toSec()-last_esft_stamp.toSec())>0.19)
         {
-            esfd2d_publisher->pub_ESDF_2D_from_globalmap(*global_map,stamp);
+            esdf2d_publisher->pub_ESDF_2D_from_globalmap(*global_map,stamp);
         }
     }
 
@@ -77,10 +77,10 @@ private:
         occupancy_grid_publisher->setGlobalMap(*global_map,"map");
         occupancy_grid_publisher_fixed_z = new Global2OccupancyGrid2DFZ(nh,"/occupancygridfz",2);
         occupancy_grid_publisher_fixed_z->setGlobalMap(*global_map,"map");
-        esfd2d_publisher = new Global2ESDF(nh,"/esfd_map","/esfd_integer_map",2);
-        esfd2d_publisher->setGlobalMap(*global_map,"map");
-        esfd3d_publisher = new Global2ESDF3DPatch(nh,"/esfd_batch",2);
-        esfd3d_publisher->setGlobalMap(*global_map,"map");
+        esdf2d_publisher = new Global2ESDF(nh,"/esdf_map","/esdf_integer_map",2);
+        esdf2d_publisher->setGlobalMap(*global_map,"map");
+        esdf3d_publisher = new Global2ESDF3DPatch(nh,"/esdf_batch",2);
+        esdf3d_publisher->setGlobalMap(*global_map,"map");
         last_esft_stamp = ros::Time::now();
         sub_from_local = nh.subscribe<glmapping::local2global>(
                     "/local2global",
