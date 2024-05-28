@@ -1,11 +1,11 @@
-#include "global2occupancygrid2d.h"
+#include "global2occupancygrid2d_fixed_z.h"
 
-Global2OccupancyGrid2D::Global2OccupancyGrid2D(ros::NodeHandle& nh, string topic_name, int buffersize)
+Global2OccupancyGrid2DFZ::Global2OccupancyGrid2DFZ(ros::NodeHandle& nh, string topic_name, int buffersize)
 {
     this->occupancygrid_pub = nh.advertise<nav_msgs::OccupancyGrid>(topic_name, buffersize);
 }
 
-void Global2OccupancyGrid2D::setGlobalMap(global_map_cartesian &map, string world_fram_name)
+void Global2OccupancyGrid2DFZ::setGlobalMap(global_map_cartesian &map, string world_fram_name)
 {
 
     this->map2d_nx = map.map_nx;
@@ -29,16 +29,21 @@ void Global2OccupancyGrid2D::setGlobalMap(global_map_cartesian &map, string worl
     }
 }
 
-void Global2OccupancyGrid2D::pub_occupancy_grid_2D_from_globalmap(global_map_cartesian &map, ros::Time stamp)
+void Global2OccupancyGrid2DFZ::pub_occupancy_grid_2D_from_globalmap(global_map_cartesian &map, ros::Time stamp)
 {
 
     occupancy_grid.header.stamp = stamp;
 
-    for(auto cell:map.occupied_cell_idx_list)
+    //TODO Here: Get Occupancy from 0 to 100, need to think about right 2D projection. Max is only giving 50 and not smaller values
+    //occupancy_grid.header.stamp = ros::Time::now();
+    int fixedZ = 120;
+    for(auto cellDouble:map.occupied_cell_percentage_idx_list)
     {
-
-        occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=100;
-
+        auto cell = cellDouble.vec;
+        if (cell(3) == fixedZ){
+            double occup3Dprob = (cellDouble.value)*100;
+            occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=occup3Dprob;
+        }
     }
 
     this->occupancygrid_pub.publish(occupancy_grid);

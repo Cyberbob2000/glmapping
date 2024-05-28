@@ -7,6 +7,7 @@
 #include <msg_local2global.h>
 #include <rviz_vis.h>
 #include <global2occupancygrid2d.h>
+#include <global2occupancygrid2d_fixed_z.h>
 #include <global2esdf.h>
 #include <global2esdf3d.h>
 
@@ -24,6 +25,7 @@ private:
     global_map_cartesian* global_map;
     rviz_vis *globalmap_publisher;
     Global2OccupancyGrid2D *occupancy_grid_publisher;
+    Global2OccupancyGrid2DFZ *occupancy_grid_publisher_fixed_z;
     Global2ESDF *esfd2d_publisher;
     Global2ESDF3DPatch *esfd3d_publisher;
     ros::Time last_esft_stamp;
@@ -72,6 +74,8 @@ private:
         globalmap_publisher =  new rviz_vis(nh,"/globalmap","map",2,min_z,max_z,d_x,d_z);
         occupancy_grid_publisher = new Global2OccupancyGrid2D(nh,"/occupancygrid",2);
         occupancy_grid_publisher->setGlobalMap(*global_map,"map");
+        occupancy_grid_publisher_fixed_z = new Global2OccupancyGrid2DFZ(nh,"/occupancygridfz",2);
+        occupancy_grid_publisher_fixed_z->setGlobalMap(*global_map,"map");
         esfd2d_publisher = new Global2ESDF(nh,"/esfd_map",2);
         esfd2d_publisher->setGlobalMap(*global_map,"map");
         esfd3d_publisher = new Global2ESDF3DPatch(nh,"/esfd_batch",2);
