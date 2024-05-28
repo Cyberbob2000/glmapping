@@ -40,6 +40,7 @@ private:
         global_map->input_pc_pose(l2g_obs_l,l2g_miss_l,T_wl);
         globalmap_publisher->pub_globalmap(global_map->visualization_cell_list,stamp);
         occupancy_grid_publisher->pub_occupancy_grid_2D_from_globalmap(*global_map,stamp);
+        occupancy_grid_publisher_fixed_z->pub_occupancy_grid_2D_from_globalmap(*global_map,stamp);
         esfd3d_publisher->pub_ESDF_3D_from_globalmap(*global_map,stamp);
         if((ros::Time::now().toSec()-last_esft_stamp.toSec())>0.19)
         {
@@ -76,7 +77,7 @@ private:
         occupancy_grid_publisher->setGlobalMap(*global_map,"map");
         occupancy_grid_publisher_fixed_z = new Global2OccupancyGrid2DFZ(nh,"/occupancygridfz",2);
         occupancy_grid_publisher_fixed_z->setGlobalMap(*global_map,"map");
-        esfd2d_publisher = new Global2ESDF(nh,"/esfd_map",2);
+        esfd2d_publisher = new Global2ESDF(nh,"/esfd_map","/esfd_integer_map",2);
         esfd2d_publisher->setGlobalMap(*global_map,"map");
         esfd3d_publisher = new Global2ESDF3DPatch(nh,"/esfd_batch",2);
         esfd3d_publisher->setGlobalMap(*global_map,"map");

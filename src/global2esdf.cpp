@@ -1,8 +1,9 @@
 #include "global2esdf.h"
 
-Global2ESDF::Global2ESDF(ros::NodeHandle& nh, string topic_name, int buffersize)
+Global2ESDF::Global2ESDF(ros::NodeHandle& nh, string topic_name,string topic_name_integer_represntation_esdf, int buffersize)
 {
     this->esdf_pub = nh.advertise<visualization_msgs::Marker>(topic_name, buffersize);
+    this->esdf_integer_pub = nh.advertise<nav_msgs::OccupancyGrid>(topic_name_integer_represntation_esdf,buffersize);
 }
 
 void Global2ESDF::setGlobalMap(global_map_cartesian &map, string world_fram_name)
@@ -42,6 +43,21 @@ void Global2ESDF::setGlobalMap(global_map_cartesian &map, string world_fram_name
         }
     }
     cout << "esdf map init finished~" << endl;
+
+    occupancy_grid.header.frame_id = world_fram_name;
+
+    occupancy_grid.info.origin.position.x = -(map2d_dx*map2d_nx)/2;
+    occupancy_grid.info.origin.position.y = -(map2d_dy*map2d_ny)/2;
+    occupancy_grid.data.clear();
+
+    occupancy_grid.info.resolution = map2d_dx;         // float32
+    occupancy_grid.info.width      = map2d_nx;           // uint32
+    occupancy_grid.info.height     = map2d_ny;           // uint32
+
+    for (int i = 0; i < map2d_nx*map2d_ny; i++)
+    {
+        occupancy_grid.data.push_back(-1);
+    }
 }
 
 Vec3 Global2ESDF::esdf_cube_coler(double ratio)
@@ -145,6 +161,7 @@ void Global2ESDF::pub_ESDF_2D_from_globalmap(global_map_cartesian &map, ros::Tim
                 color.b= 0.0;
                 color.a= static_cast<float>(0.9);
                 this->cubes_array.colors.push_back(color);
+                occupancy_grid.data.at(x+y*this->map2d_nx) = 100;
             }else
             {//Color according to distance
                 geometry_msgs::Point point;
@@ -160,12 +177,14 @@ void Global2ESDF::pub_ESDF_2D_from_globalmap(global_map_cartesian &map, ros::Tim
                 color.b= static_cast<float>(rgb(2));
                 color.a= static_cast<float>(0.9);
                 this->cubes_array.colors.push_back(color);
+                occupancy_grid.data.at(x+y*this->map2d_nx) = 100*(1-ratio);
             }
         }
     }
     if(cubes_array.points.size()!=0)
     {
         this->esdf_pub.publish(cubes_array);
+        this->esdf_integer_pub.publish(occupancy_grid);
     }
 
 

@@ -36,11 +36,12 @@ void Global2OccupancyGrid2DFZ::pub_occupancy_grid_2D_from_globalmap(global_map_c
 
     //TODO Here: Get Occupancy from 0 to 100, need to think about right 2D projection. Max is only giving 50 and not smaller values
     //occupancy_grid.header.stamp = ros::Time::now();
-    int fixedZ = 120;
     for(auto cellDouble:map.occupied_cell_percentage_idx_list)
     {
+        int fixedZ = 6;
         auto cell = cellDouble.vec;
-        if (cell(3) == fixedZ){
+        // We need to think which fixed z slice is the best one TODO
+        if (cell(2) == fixedZ){
             double occup3Dprob = (cellDouble.value)*100;
             occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=occup3Dprob;
         }

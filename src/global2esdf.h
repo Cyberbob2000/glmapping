@@ -30,14 +30,15 @@ class Global2ESDF
     vector<MatrixXd> esdf_map3d;
     MatrixXd esdf_map;
 
-
+    nav_msgs::OccupancyGrid occupancy_grid;
     visualization_msgs::Marker cubes_array;
 
     Vec3 esdf_cube_coler(double ratio);
 public:
     ros::Publisher esdf_pub;
+    ros::Publisher esdf_integer_pub;
     
-    Global2ESDF(ros::NodeHandle& nh, string topic_name, int buffersize=2);
+    Global2ESDF(ros::NodeHandle& nh, string topic_name,string topic_name_integer_represntation_esdf,int buffersize=2);
     void setGlobalMap(global_map_cartesian &map, string world_fram_name="world");
     void pub_ESDF_2D_from_globalmap(global_map_cartesian &map, ros::Time stamp=ros::Time::now());
 
