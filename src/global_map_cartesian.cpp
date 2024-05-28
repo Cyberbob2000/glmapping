@@ -1,5 +1,6 @@
 #include "global_map_cartesian.h"
 
+
 double prob2logit(double prob)
 {
     double odds = prob/(1-prob);
@@ -63,11 +64,11 @@ void global_map_cartesian::init_map(double d_x, double d_y, double d_z,
     double free_logit_min     = prob2logit(0.01);
     cout << "occupied_logit_max: " << occupied_logit_max << endl;
     cout << "free_logit_min:     " << free_logit_min << endl;
-    double ratio = measurement_cnt_max/occupied_logit_max;
+    this->ratio = measurement_cnt_max/occupied_logit_max;
     double occupied_logit = prob2logit(occupied_sh);
     double free_logit     = prob2logit(free_sh);
-    double tuned_occupied_logit = occupied_logit*ratio;
-    double tuned_free_logit     = free_logit*ratio;
+    double tuned_occupied_logit = occupied_logit*(this->ratio);
+    double tuned_free_logit     = free_logit*(this->ratio);
     this->occupied_measurement_cnt = static_cast<int>(round(tuned_occupied_logit));
     this->free_measurement_cnt = static_cast<int>(round(tuned_free_logit));
     if(occupied_measurement_cnt > measurement_cnt_max) occupied_measurement_cnt = measurement_cnt_max;
@@ -185,7 +186,10 @@ void global_map_cartesian::input_pc_pose(vector<Vec3> PC_l, vector<Vec3> PC_miss
     visualization_cell_list.clear();
     occupied_cell_idx_list.clear();
     for(auto cell:this->map)
-    {
+    {   
+        double cell_occupancy_prob = logit2prob((cell.measurement_times)/(this->ratio));
+        Vec3I_Double vec_double(Vec3I(cell.idx_x,cell.idx_y,cell.idx_z), cell_occupancy_prob);
+        occupied_cell_percentage_idx_list.push_back(vec_double);
         if(cell.is_occupied)
         {
             occupied_cell_idx_list.push_back(Vec3I(cell.idx_x,cell.idx_y,cell.idx_z));

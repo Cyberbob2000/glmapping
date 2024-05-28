@@ -4,6 +4,16 @@
 #include <utils/include/all_utils.h>
 #include <cartesian_cell.h>
 
+
+struct Vec3I_Double {
+    Vec3I vec;
+    double value;
+
+    // Constructor
+    Vec3I_Double(const Vec3I& vec, double value) : vec(vec), value(value) {}
+
+};
+
 class global_map_cartesian
 {
 private:
@@ -18,6 +28,7 @@ private:
     int measurement_cnt_min;
     int occupied_measurement_cnt;
     int free_measurement_cnt;
+    double ratio;
 
 public:
 
@@ -32,6 +43,7 @@ public:
 
     vector<Vec3> visualization_cell_list;
     vector<Vec3I> occupied_cell_idx_list;
+    vector<Vec3I_Double> occupied_cell_percentage_idx_list;
     vector<cartesian_cell> map;
     SE3 newest_T_wl;
     bool first_input;

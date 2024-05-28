@@ -33,11 +33,12 @@ void Global2OccupancyGrid2D::pub_occupancy_grid_2D_from_globalmap(global_map_car
 {
 
     occupancy_grid.header.stamp = stamp;
-    //occupancy_grid.header.stamp = ros::Time::now();
 
     for(auto cell:map.occupied_cell_idx_list)
     {
+
         occupancy_grid.data.at(cell(0)+cell(1)*map2d_nx)=100;
+
     }
 
     this->occupancygrid_pub.publish(occupancy_grid);
