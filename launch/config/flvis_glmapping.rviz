@@ -138,7 +138,7 @@ Visualization Manager:
           Value: false
         - Class: rviz/Marker
           Enabled: true
-          Marker Topic: /esfd_batch
+          Marker Topic: /esdf_batch
           Name: localesdf
           Namespaces:
             points: true
